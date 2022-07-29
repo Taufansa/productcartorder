@@ -1,0 +1,45 @@
+
+server:
+  port: "${PORT:8383}"
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: "order-svc"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    platform: "postgres"
+    url: "jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${DB_NAME:db_order}"
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      max-lifetime: 240000 # in miliseconds
+      minimum-idle: ${DB_MIN_POOL:0}
+      maximum-pool-size: ${DB_MAX_POOL:1}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+    generate-ddl: true
+
+  rabbitmq:
+    host: "${RABBITMQ_HOSTNAME:localhost}"
+    port: "${RABBITMQ_PORT:5672}"
+    virtual-host: /
+    username: "${RABBITMQ_USERNAME:guest}"
+    password: "${RABBITMQ_PASSWORD:guest}"
+    channelCacheSize: 100
+
+rabbitmq:
+  queue:
+    orderQueue: "${ORDER_QUEUE:orderQueue}"
+  exchange:
+    orderExchange: "${ORDER_EXCHANGE:orderExchange}"
+  key:
+    orderRoutingKey: "${ORDER_RK:orderKey}"
+
+link:
+  product: "${PRODUCT_LINK:http://localhost:8181/product}"
+  cart: "${CART_LINK:http://localhost:8282/cart}"

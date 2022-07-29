@@ -1,0 +1,38 @@
+server:
+  port: "${PORT:8181}"
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: "product-svc"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    platform: "postgres"
+    url: "jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${DB_NAME:db_product}"
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      max-lifetime: 240000 # in miliseconds
+      minimum-idle: ${DB_MIN_POOL:0}
+      maximum-pool-size: ${DB_MAX_POOL:1}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
+    generate-ddl: true
+
+  rabbitmq:
+    host: "${RABBITMQ_HOSTNAME:localhost}"
+    port: "${RABBITMQ_PORT:5672}"
+    virtual-host: /
+    username: "${RABBITMQ_USERNAME:guest}"
+    password: "${RABBITMQ_PASSWORD:guest}"
+    channelCacheSize: 100
+
+rabbitmq:
+  queue:
+    productQueue: "${PRODUCT_QUEUE:productQueue}"
+  exchange:
+    productExchange: "${PRODUCT_EXCHANGE:productExchange}"
